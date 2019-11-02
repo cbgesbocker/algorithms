@@ -11,6 +11,7 @@ public class Quiz {
 //        System.out.println(new Quiz().compress("aabcccccaaaaa"));
         System.out.println(new Quiz().compressBetter("aabcccccaaaaa"));
 
+        System.out.println(new Quiz().compressAlternate("aabcccccaaaaa"));
     }
 
     public boolean isUniqueChars(String str) {
@@ -176,6 +177,46 @@ public class Quiz {
         }
         size += 1 + String.valueOf(count).length();
         return size;
+    }
+
+    public String compressAlternate(String str) {
+        /* Check if compression would create a longer string */
+        int size = countCompression(str);
+        if (size >= str.length()) {
+            return str;
+        }
+        char[] array = new char[size];
+        int index = 0;
+        char last = str.charAt(0);
+        int count = 1;
+        for (int i = 1; i < str.length(); i++) {
+            if (str.charAt(i) == last){
+                count++;
+            } else {
+                // found repeat
+                index = setChar(array,last,index,count);
+                last = str.charAt(i);
+                count = 1;
+            }
+        }
+
+        index = setChar(array, last, index, count);
+        return String.valueOf(array);
+    }
+
+    public int setChar(char[] array, char c, int index, int count) {
+        array[index] = c;
+        index++;
+
+        /* convert the count to a string, then to an array of chars */
+        char[] cnt = String.valueOf(count).toCharArray();
+
+        /* copy chars from biggest digit to smallest */
+        for (char x : cnt) {
+            array[index] = x;
+            index++;
+        }
+        return index;
     }
 
 }
